@@ -4,7 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
-import { Public } from 'src/decorators/public.decorator';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller('auth')
 export class AuthController {

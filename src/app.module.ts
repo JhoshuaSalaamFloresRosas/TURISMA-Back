@@ -1,15 +1,16 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
-import { ReservationsModule } from './reservations/reservations.module';
-import { ExcursionsModule } from './excursions/excursions.module';
-import { TransportsModule } from './transports/transports.module';
+import { UsersModule } from './modules/users/users.module';
+import { ReservationsModule } from './modules/reservations/reservations.module';
+import { ExcursionsModule } from './modules/excursions/excursions.module';
+import { TransportsModule } from './modules/transports/transports.module';
 import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
+import { PaymentsModule } from './modules/payments/payments.module';
 
 @Module({
-  imports: [UsersModule, ReservationsModule, ExcursionsModule, TransportsModule],
+  imports: [UsersModule, ReservationsModule, ExcursionsModule, TransportsModule, PaymentsModule],
   controllers: [AppController],
   providers: [
     {

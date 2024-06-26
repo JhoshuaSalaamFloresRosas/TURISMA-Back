@@ -6,7 +6,7 @@ import { UsersModule } from '../users/users.module';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/JwtStrategy.strategy';
 import { AuthController } from './auth.controller';
-import { PrismaService } from '../prisma.service';
+import { PrismaService } from '../../prisma.service';
 import { UsersService } from '../users/users.service';
 
 @Module({

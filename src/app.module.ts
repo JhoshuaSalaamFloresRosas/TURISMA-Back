@@ -8,9 +8,10 @@ import { TransportsModule } from './modules/transports/transports.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { PaymentsModule } from './modules/payments/payments.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
-  imports: [UsersModule, ReservationsModule, ExcursionsModule, TransportsModule, PaymentsModule],
+  imports: [UsersModule, ReservationsModule, ExcursionsModule, TransportsModule, PaymentsModule, AuthModule],
   controllers: [AppController],
   providers: [
     {

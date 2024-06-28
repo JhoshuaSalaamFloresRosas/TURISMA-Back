@@ -20,8 +20,9 @@ model User {
   firstName String   @db.VarChar(120)
   phone     String   @db.VarChar(20)
   email     String   @db.VarChar(120) @unique
-  admin     Boolean   @default(false)
-  userPhoto String?  @db.Text
+  admin     Boolean?   @default(false)
+  userPhoto String?  @db.Text @default("defaultUser.png")
+  verificationToken String? @db.VarChar(120)
   reservations Reservation[]
 }
 
@@ -50,7 +51,7 @@ model Excursion {
   outPoint      String?     @db.VarChar(200)
   sitApart      Int?
   status        StatusExcur
-
+  likes         Int?
 
   reservations  Reservation[]
   stopPoints    StopPoint[]

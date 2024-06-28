@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma.service';
@@ -14,7 +14,6 @@ export class UsersService {
         const user = await this.prisma.user.findUnique({
             where:{
               email
-              //solo usuario activo
             }
           });
           //evitar excepcion para retornar estatus 401 con passport
@@ -34,28 +33,39 @@ export class UsersService {
         });
       }
  
-  /*
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
-  }
 
   findAll() {
     return `This action returns all users`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number):Promise<User> {
+    const user = await this.prisma.user.findUnique({
+      where:{
+        id
+      }
+    });
+    if(!user){
+      throw new NotFoundException("Usuario no encontrado")
+    }
+    return user
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, user: Prisma.UserUpdateInput): Promise<User> {
+   await this.findOne(id);
+
+   return this.prisma.user.update({
+    data: user,
+    where:{
+      id
+    }
+   })
+
+
   }
 
   remove(id: number) {
     return `This action removes a #${id} user`;
   }
-*/
-
 
   //Actualiza el Servicio de Usuarios para Manejar el Token de Verificación
   async findById(id: number) {
@@ -83,4 +93,5 @@ export class UsersService {
     });
   }
   /////David
+
   }

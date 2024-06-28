@@ -37,7 +37,7 @@ export class AuthService {
 
   ///////Ajusta el servicio de autenticación para manejar el envío dinámico de tokens y la verificación:
 
-  async sendVerification(userId: string, method: 'email' | 'sms'): Promise<void> {
+  async sendVerification(userId: number, method: 'email' | 'sms'): Promise<void> {
     const user = await this.usersService.findById(userId);
 
     if (!user) {
@@ -54,7 +54,7 @@ export class AuthService {
     }
   }
 
-  async verifyToken(userId: string, token: string, method: 'email' | 'sms'): Promise<boolean> {
+  async verifyToken(userId: number, token: string, method: 'email' | 'sms'): Promise<boolean> {
     const user = await this.usersService.findById(userId);
 
     if (user.verificationToken === token) {
@@ -65,7 +65,7 @@ export class AuthService {
     return false;
   }
 
-  async changePassword(userId: string, changePasswordDto: ChangePasswordDto): Promise<void> {
+  async changePassword(userId: number, changePasswordDto: ChangePasswordDto): Promise<void> {
     const { oldPassword, newPassword, token, method } = changePasswordDto;
     const isVerified = await this.verifyToken(userId, token, method);
 
@@ -89,5 +89,5 @@ export class AuthService {
     await this.usersService.updatePassword(userId, hashedNewPassword);
   }
   //////David
-  
+
 }

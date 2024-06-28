@@ -38,6 +38,11 @@ export class UsersService {
     return `This action returns all users`;
   }
 
+  /**
+   * Funcion para buscar un usuario
+   * @param id 
+   * @returns 
+   */
   async findOne(id: number):Promise<User> {
     const user = await this.prisma.user.findUnique({
       where:{
@@ -50,6 +55,12 @@ export class UsersService {
     return user
   }
 
+  /**
+   * Funcion para actualizar
+   * @param id 
+   * @param user 
+   * @returns 
+   */
   async update(id: number, user: Prisma.UserUpdateInput): Promise<User> {
    await this.findOne(id);
 

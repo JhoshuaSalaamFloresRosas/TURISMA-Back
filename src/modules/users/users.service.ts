@@ -55,4 +55,32 @@ export class UsersService {
     return `This action removes a #${id} user`;
   }
 */
+
+
+  //Actualiza el Servicio de Usuarios para Manejar el Token de Verificación
+  async findById(id: number) {
+    return this.prisma.user.findUnique({ where: { id } });
+  }
+
+  async updatePassword(userId: number, hashedPassword: string) {
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: { password: hashedPassword },
+    });
+  }
+
+  async saveVerificationToken(userId: number, token: string) {
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: { verificationToken: token },
+    });
+  }
+
+  async clearVerificationToken(userId: number) {
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: { verificationToken: null },
+    });
+  }
+  /////David
   }

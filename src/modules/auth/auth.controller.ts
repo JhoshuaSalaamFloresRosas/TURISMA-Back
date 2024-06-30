@@ -6,6 +6,7 @@ import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { Public } from 'src/common/decorators/public.decorator';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -32,21 +33,20 @@ export class AuthController {
     return this.authService.login(user); // Devolver JWT después de registrar
   }
 
-  //manejar las solicitudes de cambio de contraseña con verificación dinámica
-  @UseGuards(AuthGuard)
+  // Manejar las solicitudes de cambio de contraseña con verificación dinámica
+  @UseGuards(JwtAuthGuard)
   @Post('send-verification')
   async sendVerification(@Request() req, @Body('method') method: 'email' | 'sms') {
-    const userId = req.user.id;
+    const userId = req.user.userId; // Ajuste aquí para usar `userId` en lugar de `id`
     await this.authService.sendVerification(userId, method);
     return { message: 'Verification code sent successfully' };
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Patch('change-password')
   async changePassword(@Request() req, @Body() changePasswordDto: ChangePasswordDto) {
-    const userId = req.user.id;
+    const userId = req.user.userId; // Ajuste aquí para usar `userId` en lugar de `id`
     await this.authService.changePassword(userId, changePasswordDto);
     return { message: 'Password changed successfully' };
   }
-  //David
 }

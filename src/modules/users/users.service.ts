@@ -79,25 +79,25 @@ export class UsersService {
   }
 
   //Actualiza el Servicio de Usuarios para Manejar el Token de Verificación
-  async findById(id: number) {
+  async findById(id: number): Promise<User> {
     return this.prisma.user.findUnique({ where: { id } });
   }
 
-  async updatePassword(userId: number, hashedPassword: string) {
+  async updatePassword(userId: number, hashedPassword: string): Promise<User> {
     return this.prisma.user.update({
       where: { id: userId },
       data: { password: hashedPassword },
     });
   }
 
-  async saveVerificationToken(userId: number, token: string) {
+  async saveVerificationToken(userId: number, token: string): Promise<User> {
     return this.prisma.user.update({
       where: { id: userId },
       data: { verificationToken: token },
     });
   }
 
-  async clearVerificationToken(userId: number) {
+  async clearVerificationToken(userId: number): Promise<User>  {
     return this.prisma.user.update({
       where: { id: userId },
       data: { verificationToken: null },

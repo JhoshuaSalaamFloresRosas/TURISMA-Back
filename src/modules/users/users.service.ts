@@ -105,4 +105,17 @@ export class UsersService {
   }
   /////David
 
+  // Encuentra un usuario por su token de verificación
+  async findByVerificationToken(token: string): Promise<User> {
+    return this.prisma.user.findFirst({ where: { verificationToken: token } });
+  }
+
+  // Verifica el correo electrónico de un usuario
+  async verifyEmail(userId: number): Promise<void> {
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { isEmailVerified: true, verificationToken: null },
+    });
+  }
+
   }

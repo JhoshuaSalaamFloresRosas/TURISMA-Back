@@ -9,11 +9,10 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { AuthModule } from './modules/auth/auth.module';
-//import { EmailService } from './common/services/email.service';
-//import { SmsService } from './common/services/sms.service';
+import { PhotosModule } from './modules/photos/photos.module';
 
 @Module({
-  imports: [UsersModule, ReservationsModule, ExcursionsModule, TransportsModule, PaymentsModule, AuthModule],
+  imports: [UsersModule, ReservationsModule, ExcursionsModule, TransportsModule, PaymentsModule, AuthModule, PhotosModule],
   controllers: [AppController],
   providers: [
     {
@@ -21,8 +20,7 @@ import { AuthModule } from './modules/auth/auth.module';
       useClass: JwtAuthGuard
     },
     AppService,
-    //EmailService,
-    //SmsService
+    
     ],
 })
 export class AppModule {}

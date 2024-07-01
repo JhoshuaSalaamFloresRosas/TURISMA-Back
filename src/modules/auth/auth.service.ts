@@ -7,6 +7,7 @@ import { EmailService } from '../../common/services/email.service';
 import { SmsService } from '../../common/services/sms.service';
 import { v4 as uuidv4 } from 'uuid';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -33,6 +34,26 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
       user: userInfo
     };
+  }
+
+  async register(createUserDto: CreateUserDto): Promise<void> {
+    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    const user = await this.usersService.create({
+      ...createUserDto,
+      password: hashedPassword,
+    });
+    const token = uuidv4();
+    await this.usersService.saveVerificationToken(user.id, token);
+    await this.emailService.sendVerificationEmailRegister(user.email, token);
+  }
+
+  async verifyEmail(token: string): Promise<boolean> {
+    const user = await this.usersService.findByVerificationToken(token);
+    if (!user) {
+      return false;
+    }
+    await this.usersService.verifyEmail(user.id);
+    return true;
   }
 
   ///////Ajusta el servicio de autenticación para manejar el envío dinámico de tokens y la verificación:

@@ -23,6 +23,7 @@ model User {
   admin     Boolean?   @default(false)
   userPhoto String?  @db.Text @default("defaultUser.png")
   verificationToken String? @db.VarChar(120)
+  isEmailVerified    Boolean      @default(false)
   reservations Reservation[]
 }
 

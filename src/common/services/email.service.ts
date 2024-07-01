@@ -15,6 +15,18 @@ export class EmailService {
     });
   }
 
+  async sendVerificationEmailRegister(to: string, token: string): Promise<void> {
+    const verificationUrl = `${process.env.BASE_URL}/auth/verify-email?token=${token}`;
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to,
+      subject: 'Verificación de correo electrónico',
+      text: `Haz clic en el siguiente enlace para verificar tu correo electrónico: ${verificationUrl}`,
+      html: `<p>Haz clic en el siguiente enlace para verificar tu correo electrónico:</p><p><a href="${verificationUrl}">${verificationUrl}</a></p>`,
+    };
+    await this.transporter.sendMail(mailOptions);
+   }
+
   async sendVerificationEmail(to: string, token: string): Promise<void> {
     const mailOptions = {
       from: process.env.EMAIL_USER,

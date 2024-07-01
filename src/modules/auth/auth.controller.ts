@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Patch, Post, Query, Request, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post, Query, Request, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthService } from './auth.service';
@@ -62,5 +62,12 @@ export class AuthController {
     const userId = req.user.userId;
     await this.authService.changePassword(userId, changePasswordDto);
     return { message: 'Contraseña cambiada correctamente' };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('/delete')
+  async deleteUser(@Request() req) {
+    const userId = req.user.userId
+    return this.usersService.deleteUser(userId);
   }
 }

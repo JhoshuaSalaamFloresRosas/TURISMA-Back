@@ -7,6 +7,7 @@ import * as bcrypt from 'bcrypt';
 import { Public } from 'src/common/decorators/public.decorator';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { UpdateUserDto } from '../users/dto/update-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -45,6 +46,14 @@ export class AuthController {
       throw new BadRequestException('Token de verificación no válido o caducado.');
     }
     return { message: 'Correo electrónico verificado con éxito.' };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('/update')
+  async update(@Request() req, @Body() updateUserDto: UpdateUserDto) {
+    const userId = req.user.userId;
+    await this.usersService.update(userId, updateUserDto);
+    return {message: 'Usuario actualizado'}
   }
 
   

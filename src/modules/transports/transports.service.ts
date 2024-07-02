@@ -28,4 +28,13 @@ export class TransportsService {
   }
 
 
+  remove(id: number) {
+    return this.prisma.transport.delete({
+      where: {
+        id
+      }
+    })
+  }
+
+
 }

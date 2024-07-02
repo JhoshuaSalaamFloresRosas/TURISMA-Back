@@ -30,4 +30,10 @@ export class TransportsController {
     return this.transportsService.update(+id, updateTransportDto);
   }
 
+  @Public()
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.transportsService.remove(+id);
+  }
+
 }

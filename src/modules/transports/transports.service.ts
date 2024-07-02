@@ -1,15 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTransportDto } from './dto/create-transport.dto';
 import { UpdateTransportDto } from './dto/update-transport.dto';
+import { Prisma, Transport } from '@prisma/client';
+import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class TransportsService {
-  create(createTransportDto: CreateTransportDto) {
-    return 'This action adds a new transport';
+
+  constructor(private prisma: PrismaService) {}
+
+  async create(data: Prisma.TransportCreateInput): Promise<Transport> {
+    return this.prisma.transport.create({
+      data
+    });
   }
 
-  findAll() {
-    return `This action returns all transports`;
+  findAll(): Promise<Transport[]> {
+    return this.prisma.transport.findMany()
   }
 
   findOne(id: number) {
@@ -20,7 +27,5 @@ export class TransportsService {
     return `This action updates a #${id} transport`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} transport`;
-  }
+
 }

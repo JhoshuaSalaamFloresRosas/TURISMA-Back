@@ -9,7 +9,6 @@ import { Public } from 'src/common/decorators/public.decorator';
 export class ExcursionsController {
   constructor(private readonly excursionsService: ExcursionsService) {}
 
-  @Public()
   @Post()
   create(@Body() createExcursionDto: CreateExcursionDto) {
     return this.excursionsService.create(createExcursionDto);
@@ -21,26 +20,24 @@ export class ExcursionsController {
     return this.excursionsService.findAll();
   }
 
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.excursionsService.findOne(+id);
   }
 
-  @Public()
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateExcursionDto: UpdateExcursionDto) {
     return this.excursionsService.update(+id, updateExcursionDto);
   }
 
-  @Public()
+
   @Patch(':id/status')
   updateStatus(@Param('id') id: string, @Body() updateExcursionStatusDto: UpdateExcursionStatusDto) {
     return this.excursionsService.updateStatus(+id, updateExcursionStatusDto);
   }
-  /**
-   * Ruta para obtener la informacion de todas las excursiones junto con sus usuarios que reservaron
-   * @returns 
-   */
+
   @Get(':id/detailed')
   findAllDetailed(@Param('id') id: string) {
     return this.excursionsService.findAllDetailed(+id);

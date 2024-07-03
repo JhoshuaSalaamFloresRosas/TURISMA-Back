@@ -62,7 +62,7 @@ export class AuthService {
     const user = await this.usersService.findById(userId);
 
     if (!user) {
-      throw new BadRequestException('User not found');
+      throw new BadRequestException('Usuario no encontrado');
     }
 
     const token = uuidv4();
@@ -91,19 +91,19 @@ export class AuthService {
     const isVerified = await this.verifyToken(userId, token, method);
 
     if (!isVerified) {
-      throw new BadRequestException('Invalid verification token');
+      throw new BadRequestException('Token de verificación no válido');
     }
 
     const user = await this.usersService.findById(userId);
 
     if (!user) {
-      throw new BadRequestException('User not found');
+      throw new BadRequestException('Usuario no encontrado');
     }
 
     const isOldPasswordValid = await bcrypt.compare(oldPassword, user.password);
 
     if (!isOldPasswordValid) {
-      throw new BadRequestException('Old password is incorrect');
+      throw new BadRequestException('La contraseña antigua es incorrecta');
     }
 
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);

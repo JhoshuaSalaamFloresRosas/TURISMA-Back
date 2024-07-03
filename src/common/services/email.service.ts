@@ -31,8 +31,8 @@ export class EmailService {
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to,
-      subject: 'Password Change Verification',
-      text: `Your verification code is: ${token}`,
+      subject: 'Verificación de cambio de contraseña',
+      text: `Su código de verificación es: ${token}`,
     };
 
     await this.transporter.sendMail(mailOptions);

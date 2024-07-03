@@ -37,7 +37,10 @@ export class ExcursionsController {
   updateStatus(@Param('id') id: string, @Body() updateExcursionStatusDto: UpdateExcursionStatusDto) {
     return this.excursionsService.updateStatus(+id, updateExcursionStatusDto);
   }
-
+  /**
+   * Ruta para obtener la informacion de todas las excursiones junto con sus usuarios que reservaron
+   * @returns 
+   */
   @Get(':id/detailed')
   findAllDetailed(@Param('id') id: string) {
     return this.excursionsService.findAllDetailed(+id);

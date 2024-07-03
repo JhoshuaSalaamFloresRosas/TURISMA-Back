@@ -11,7 +11,7 @@ export class SmsService {
 
   async sendVerificationSms(to: string, token: string): Promise<void> {
     await this.client.messages.create({
-      body: `Your verification code is: ${token}`,
+      body: `Su código de verificación es: ${token}`,
       from: process.env.TWILIO_PHONE_NUMBER,
       to,
     });

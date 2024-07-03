@@ -18,6 +18,6 @@ import { AuthModule } from './modules/auth/auth.module';
       provide: APP_GUARD,
       useClass: JwtAuthGuard
     },
-    AppService],
+    AppService,],
 })
 export class AppModule {}

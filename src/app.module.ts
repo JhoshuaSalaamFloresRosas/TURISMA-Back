@@ -19,8 +19,6 @@ import { PhotosModule } from './modules/photos/photos.module';
       provide: APP_GUARD,
       useClass: JwtAuthGuard
     },
-    AppService,
-    
-    ],
+    AppService,],
 })
 export class AppModule {}

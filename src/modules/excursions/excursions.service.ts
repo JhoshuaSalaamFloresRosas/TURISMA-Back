@@ -23,7 +23,7 @@ export class ExcursionsService {
     if (!excursion) {
       throw new NotFoundException('Excursion no encontrada')
     }
-
+    
   }
 
 

@@ -21,10 +21,12 @@ model User {
   phone     String   @db.VarChar(20)
   email     String   @db.VarChar(120) @unique
   admin     Boolean?   @default(false)
+  actvie    Boolean?  @default(true)  
   userPhoto String?  @db.Text @default("defaultUser.png")
   verificationToken String? @db.VarChar(120)
   isEmailVerified    Boolean      @default(false)
   reservations Reservation[]
+
 }
 
 model Reservation {
@@ -36,7 +38,7 @@ model Reservation {
   date        DateTime      @default(now())
   payment     Payment       @relation(fields: [paymentId], references: [id])
   paymentId   Int
-  statusReserv StatusReserv
+  statusReserv StatusReserv @default(PENDING)
   seats       Seat[]
 }
 
@@ -92,7 +94,7 @@ model Activity {
 model Payment {
   id          Int        @id @default(autoincrement())
   reservation Reservation[]
-  date        DateTime @default(now())
+  date        DateTime?
   totalCost   Int
   alreadyPay Int?
   partialPay  Boolean?
@@ -119,6 +121,7 @@ model Photo {
 
   
 }
+
 
 enum StatusReserv {
   COMPLETE

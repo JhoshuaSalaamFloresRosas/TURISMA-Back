@@ -22,5 +22,6 @@ import { SmsService } from 'src/common/services/sms.service';
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy, PrismaService, UsersService, EmailService, SmsService],
   controllers: [AuthController],
+  exports: [JwtModule],
 })
 export class AuthModule {}

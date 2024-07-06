@@ -89,7 +89,7 @@ export class ExcursionsService {
       });
       return { message: 'La excursión ha sido agregada exitosamente' };
     } catch (error) {
-      throw new NotFoundException('Error al crear la excursión' + error);
+      throw new NotFoundException('Error al crear la excursión');
     }
   }
 
@@ -112,7 +112,7 @@ export class ExcursionsService {
       });
       return excursionE
     } catch (error) {
-      throw new NotFoundException('Error al actualizar la excursión ' + error);
+      throw new NotFoundException('Error al actualizar la excursión ');
     }
   }
 
@@ -134,7 +134,7 @@ export class ExcursionsService {
       });
       return { message: "El estatus fue cambiado exitosamente" }
     } catch (error) {
-      throw new NotFoundException('Error al actualizar el estatus ' + error);
+      throw new NotFoundException('Error al actualizar el estatus ');
     }
   }
 

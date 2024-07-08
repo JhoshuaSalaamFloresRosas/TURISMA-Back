@@ -8,6 +8,8 @@ import { SmsService } from '../../common/services/sms.service';
 import { v4 as uuidv4 } from 'uuid';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { CreateUserDto } from './dto/create-user.dto';
+import { ChangePhoneDto } from './dto/change-phone.dto';
+import { RecoveryPasswordDto } from './dto/recovery-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -65,7 +67,7 @@ export class AuthService {
       throw new BadRequestException('Usuario no encontrado');
     }
 
-    const token = uuidv4();
+    const token = uuidv4().slice(0, 6);
     await this.usersService.saveVerificationToken(userId, token);
 
     if (method === 'email') {
@@ -75,7 +77,7 @@ export class AuthService {
     }
   }
 
-  async verifyToken(userId: number, token: string, method: 'email' | 'sms'): Promise<boolean> {
+  async verifyToken(userId: number, token: string): Promise<boolean> {
     const user = await this.usersService.findById(userId);
 
     if (user.verificationToken === token) {
@@ -87,8 +89,8 @@ export class AuthService {
   }
 
   async changePassword(userId: number, changePasswordDto: ChangePasswordDto): Promise<void> {
-    const { oldPassword, newPassword, token, method } = changePasswordDto;
-    const isVerified = await this.verifyToken(userId, token, method);
+    const { oldPassword, newPassword, token} = changePasswordDto;
+    const isVerified = await this.verifyToken(userId, token);
 
     if (!isVerified) {
       throw new BadRequestException('Token de verificación no válido');
@@ -111,4 +113,68 @@ export class AuthService {
   }
   //////David
 
+  async sendVerificationPhone(userId: number): Promise<void> {
+    const user = await this.usersService.findById(userId);
+
+    if (!user) {
+      throw new BadRequestException('Usuario no encontrado');
+    }
+
+    const token = uuidv4().slice(0, 6);
+    await this.usersService.saveVerificationToken(userId, token);
+    await this.emailService.sendVerificationPhone(user.email, token);
+  }
+
+  async changePhone(userId: number, changePhoneDto: ChangePhoneDto): Promise<void> {
+    const {oldPhone, newPhone, token} = changePhoneDto;
+    const isVerified = await this.verifyToken(userId, token);
+
+    if (!isVerified){
+      throw new BadRequestException('Token de verificación no valido');
+    }
+
+    const user = await this.usersService.findById(userId);
+
+    if(!user) {
+      throw new BadRequestException('Usuario no encontrado');
+    }
+
+    const isOldPhoneValid = oldPhone === user.phone;
+
+    if (!isOldPhoneValid) {
+      throw new BadRequestException('El telefono antiguo es incorrecto');
+    }
+
+    await this.usersService.updatePhone(userId, newPhone)
+  }
+
+  async sendVerificationRecovery(userId: number): Promise<void> {
+    const user = await this.usersService.findById(userId);
+
+    if (!user) {
+      throw new BadRequestException('Usuario no encontrado');
+    }
+
+    const token = uuidv4().slice(0, 6);
+    await this.usersService.saveVerificationToken(userId, token);
+    await this.emailService.sendVerificationEmail(user.email, token);
+  }
+
+  async recoveryPassword(userId: number, recoveryPassword: RecoveryPasswordDto): Promise<void> {
+    const { newPassword, token} = recoveryPassword;
+    const isVerified = await this.verifyToken(userId, token);
+
+    if (!isVerified) {
+      throw new BadRequestException('Token de verificación no válido');
+    }
+
+    const user = await this.usersService.findById(userId);
+
+    if (!user) {
+      throw new BadRequestException('Usuario no encontrado');
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    await this.usersService.updatePassword(userId, hashedNewPassword);
+  }
 }

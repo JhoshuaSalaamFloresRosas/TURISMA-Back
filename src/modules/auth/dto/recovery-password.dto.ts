@@ -1,10 +1,6 @@
 import { IsString, IsNotEmpty } from 'class-validator';
 
-export class ChangePasswordDto {
-  @IsString()
-  @IsNotEmpty()
-  oldPassword: string;
-
+export class RecoveryPasswordDto {
   @IsString()
   @IsNotEmpty()
   newPassword: string;

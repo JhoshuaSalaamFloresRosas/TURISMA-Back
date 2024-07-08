@@ -1,13 +1,13 @@
 import { IsString, IsNotEmpty } from 'class-validator';
 
-export class ChangePasswordDto {
+export class ChangePhoneDto {
   @IsString()
   @IsNotEmpty()
-  oldPassword: string;
+  oldPhone: string;
 
   @IsString()
   @IsNotEmpty()
-  newPassword: string;
+  newPhone: string;
 
   @IsString()
   @IsNotEmpty()

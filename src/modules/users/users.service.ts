@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma.service';
@@ -65,7 +65,10 @@ export class UsersService {
     await this.findOne(id);
 
     return this.prisma.user.update({
-      data: user,
+      data:{
+        name: user.name,
+        firstName: user.firstName
+      },
       where: {
         id
       }
@@ -116,7 +119,7 @@ export class UsersService {
     });
   }
 
-  async deleteUser(id: number): Promise<{ message: string }> {
+  async deleteUser(id: number, providedEmail?: string): Promise<{ message: string }> {
     const user = await this.prisma.user.findUnique({
       where: { id },
     });
@@ -125,11 +128,23 @@ export class UsersService {
       throw new NotFoundException('Usuario no encontrado');
     }
 
+    // Verificar si se proporcionó un correo electrónico y si coincide
+    if (providedEmail && user.email !== providedEmail) {
+      throw new UnauthorizedException('El correo electrónico proporcionado no coincide con el usuario');
+    }
+
     await this.prisma.user.delete({
       where: { id },
     });
 
     return { message: 'Usuario eliminado correctamente' };
+  }
+
+  async updatePhone(userId: number, newPhone: string): Promise<User> {
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: { phone: newPhone },
+    });
   }
 
 }

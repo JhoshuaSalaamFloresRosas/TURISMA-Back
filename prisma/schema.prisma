@@ -20,47 +20,59 @@ model User {
   firstName String   @db.VarChar(120)
   phone     String   @db.VarChar(20)
   email     String   @db.VarChar(120) @unique
-  admin     Boolean   @default(false)
-  userPhoto String?  @db.Text
+  admin     Boolean?   @default(false)
+  actvie    Boolean?  @default(true)  
+  userPhoto String?  @db.Text @default("defaultUser.png")
+  verificationToken String? @db.VarChar(120)
+  isEmailVerified    Boolean      @default(false)
   reservations Reservation[]
+
 }
 
 model Reservation {
-  id          Int          @id @default(autoincrement())
-  users        User         @relation(fields: [user], references: [id])
-  user      Int
-  excursions   Excursion    @relation(fields: [excursion], references: [id])
-  excursion Int
-  date        DateTime @default(now())
-  sitNumber String       @db.VarChar(50)
-  paymentId   Payment     @relation(fields: [payment], references: [id])
-  payment   Int
-  statusReserv StatusReserv
-  
+  id          Int           @id @default(autoincrement())
+  user        User          @relation(fields: [userId], references: [id])
+  userId      Int
+  excursion   Excursion     @relation(fields: [excursionId], references: [id])
+  excursionId Int
+  date        DateTime      @default(now())
+  payment     Payment       @relation(fields: [paymentId], references: [id])
+  paymentId   Int
+  statusReserv StatusReserv @default(PENDING)
+  seats       Seat[]
+}
+
+model Seat {
+  id           Int          @id @default(autoincrement())
+  reservation  Reservation  @relation(fields: [reservationId], references: [id])
+  reservationId Int
+  seatNumber   String       @db.VarChar(50)
 }
 
 model Excursion {
-  id            Int         @id @default(autoincrement())
-  name          String      @db.VarChar(120)
-  departureDate DateTime
+  id            Int          @id @default(autoincrement())
+  name          String       @db.VarChar(120)
+  description   String       @db.VarChar(200)
+  departureDate DateTime?
   arrivalDate   DateTime?
   price         Int?
-  transportId     Transport?  @relation(fields: [transport], references: [id])
-  transport     Int?
-  outPoint      String?     @db.VarChar(200)
-  sitApart      Int?
-  status        StatusExcur
-
+  duration      String       @db.VarChar(120)
+  transport     Transport?   @relation(fields: [transportId], references: [id])
+  transportId   Int?
+  outPoint      String?      @db.VarChar(200)
+  status        StatusExcur? @default(PENDING)
+  like          Int?         @default(0)
 
   reservations  Reservation[]
   stopPoints    StopPoint[]
   photos        Photo[]
 }
 
+
 model StopPoint {
   id          Int        @id @default(autoincrement())
-  excursionId  Excursion  @relation(fields: [excursion], references: [id])
-  excursion Int
+  excursion  Excursion  @relation(fields: [excursionId], references: [id])
+  excursionId Int
   name        String     @db.VarChar(200)
   numStop     Int
   duration    String     @db.VarChar(200)
@@ -71,8 +83,8 @@ model StopPoint {
 
 model Activity {
   id          Int        @id @default(autoincrement())
-  stopPointId   StopPoint  @relation(fields: [stopPoint], references: [id])
-  stopPoint Int
+  stopPoint   StopPoint  @relation(fields: [stopPointId], references: [id])
+  stopPointId Int
   name        String     @db.VarChar(200)
   numActivity Int
   description String     @db.Text
@@ -82,7 +94,7 @@ model Activity {
 model Payment {
   id          Int        @id @default(autoincrement())
   reservation Reservation[]
-  date        DateTime @default(now())
+  date        DateTime?
   totalCost   Int
   alreadyPay Int?
   partialPay  Boolean?
@@ -103,12 +115,13 @@ model Transport {
 
 model Photo {
   id          Int        @id @default(autoincrement())
-  excursionId   Excursion  @relation(fields: [excursion], references: [id])
-  excursion Int
+  excursion   Excursion  @relation(fields: [excursionId], references: [id])
+  excursionId Int
   imageUrl    String     @db.VarChar(200)
 
   
 }
+
 
 enum StatusReserv {
   COMPLETE
@@ -117,7 +130,7 @@ enum StatusReserv {
 }
 
 enum StatusExcur {
-  PROCESS
+  LISTED
   FINISHED
   CANCELED
   PENDING

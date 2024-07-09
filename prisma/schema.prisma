@@ -36,10 +36,9 @@ model Reservation {
   excursion   Excursion     @relation(fields: [excursionId], references: [id])
   excursionId Int
   date        DateTime      @default(now())
-  payment       Payment?      @relation(fields: [paymentId], references: [id])
-  paymentId     Int?          @unique
   statusReserv StatusReserv @default(PENDING)
   seats       Seat[]
+  payment Payment[]
 }
 
 model Seat {
@@ -93,11 +92,11 @@ model Activity {
 
 model Payment {
   id          Int        @id @default(autoincrement())
-  reservation   Reservation? @relation
+  reservation   Reservation? @relation(fields: [reservationId], references: [id])
   reservationId Int?         @unique
-  date        DateTime?
+  date        DateTime?      @default(now())
   totalCost   Int
-  alreadyPay  Int?
+  alreadyPay  Int?           @default(0)
   partialPay  Boolean?
   status      Boolean
 }

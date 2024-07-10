@@ -13,17 +13,11 @@ export class RolesGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const authHeader = request.headers.authorization;
 
-    if (!authHeader) {
-      throw new NotFoundException('No existe authorization header');
-    }
-
     const token = authHeader.split(' ')[1];
-    const decoded = this.jwtService.decode(token) as { sub: number };
 
-    if (!decoded || !decoded.sub) {
-      throw new UnauthorizedException('Token no valido');
-    }
-
+    let decoded = this.jwtService.verify(token);
+    console.log(decoded);
+    
     const userFromDb = await this.prisma.user.findUnique({
       where: {
         id: decoded.sub,
@@ -34,7 +28,7 @@ export class RolesGuard implements CanActivate {
       throw new NotFoundException('Usuario no encontrado');
     }
 
-    if (!userFromDb || !userFromDb.admin) {
+    if (!userFromDb.admin) {
       throw new UnauthorizedException('No tiene permisos para realizar esta acción');
     }
 

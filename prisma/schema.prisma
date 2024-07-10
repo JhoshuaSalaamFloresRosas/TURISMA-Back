@@ -14,39 +14,40 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String   @db.VarChar(120)
-  password  String   @db.VarChar(120)
-  firstName String   @db.VarChar(120)
-  phone     String   @db.VarChar(20)
-  email     String   @db.VarChar(120) @unique
-  admin     Boolean?   @default(false)
-  actvie    Boolean?  @default(true)  
-  userPhoto String?  @db.Text @default("defaultUser.png")
-  verificationToken String? @db.VarChar(120)
-  isEmailVerified    Boolean      @default(false)
-  reservations Reservation[]
+  id                Int           @id @default(autoincrement())
+  name              String        @db.VarChar(120)
+  password          String        @db.VarChar(120)
+  firstName         String        @db.VarChar(120)
+  phone             String        @db.VarChar(20)
+  email             String        @unique @db.VarChar(120)
+  admin             Boolean?      @default(false)
+  actvie            Boolean?      @default(true)
+  userPhoto         String?       @default("defaultUser.png") @db.Text
+  verificationToken String?       @db.VarChar(120)
+  isEmailVerified   Boolean       @default(false)
+  reservations      Reservation[]
 
+  ExcursionLike ExcursionLike[]
 }
 
 model Reservation {
-  id          Int           @id @default(autoincrement())
-  user        User          @relation(fields: [userId], references: [id])
-  userId      Int
-  excursion   Excursion     @relation(fields: [excursionId], references: [id])
-  excursionId Int
-  date        DateTime      @default(now())
-  payment     Payment       @relation(fields: [paymentId], references: [id])
-  paymentId   Int
+  id           Int          @id @default(autoincrement())
+  user         User         @relation(fields: [userId], references: [id])
+  userId       Int
+  excursion    Excursion    @relation(fields: [excursionId], references: [id])
+  excursionId  Int
+  date         DateTime     @default(now())
+  payment      Payment      @relation(fields: [paymentId], references: [id])
+  paymentId    Int
   statusReserv StatusReserv @default(PENDING)
-  seats       Seat[]
+  seats        Seat[]
 }
 
 model Seat {
-  id           Int          @id @default(autoincrement())
-  reservation  Reservation  @relation(fields: [reservationId], references: [id])
+  id            Int         @id @default(autoincrement())
+  reservation   Reservation @relation(fields: [reservationId], references: [id])
   reservationId Int
-  seatNumber   String       @db.VarChar(50)
+  seatNumber    String      @db.VarChar(50)
 }
 
 model Excursion {
@@ -61,67 +62,71 @@ model Excursion {
   transportId   Int?
   outPoint      String?      @db.VarChar(200)
   status        StatusExcur? @default(PENDING)
-  like          Int?         @default(0)
+  likes         Int?         @default(0)
 
-  reservations  Reservation[]
-  stopPoints    StopPoint[]
-  photos        Photo[]
+  reservations Reservation[]
+  stopPoints   StopPoint[]
+  photos       Photo[]
+  likesList    ExcursionLike[]
 }
 
+model ExcursionLike {
+  id          Int @id @default(autoincrement())
+  excursionId Int
+  userId      Int
+
+  excursion Excursion @relation(fields: [excursionId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@unique([excursionId, userId])
+}
 
 model StopPoint {
-  id          Int        @id @default(autoincrement())
-  excursion  Excursion  @relation(fields: [excursionId], references: [id])
+  id          Int       @id @default(autoincrement())
+  excursion   Excursion @relation(fields: [excursionId], references: [id])
   excursionId Int
-  name        String     @db.VarChar(200)
+  name        String    @db.VarChar(200)
   numStop     Int
-  duration    String     @db.VarChar(200)
+  duration    String    @db.VarChar(200)
 
-
-  activities  Activity[]
+  activities Activity[]
 }
 
 model Activity {
-  id          Int        @id @default(autoincrement())
-  stopPoint   StopPoint  @relation(fields: [stopPointId], references: [id])
+  id          Int       @id @default(autoincrement())
+  stopPoint   StopPoint @relation(fields: [stopPointId], references: [id])
   stopPointId Int
-  name        String     @db.VarChar(200)
+  name        String    @db.VarChar(200)
   numActivity Int
-  description String     @db.Text
-  
+  description String    @db.Text
 }
 
 model Payment {
-  id          Int        @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   reservation Reservation[]
   date        DateTime?
   totalCost   Int
-  alreadyPay Int?
+  alreadyPay  Int?
   partialPay  Boolean?
   status      Boolean
-
-  
 }
 
 model Transport {
-  id         Int        @id @default(autoincrement())
-  brand      String     @db.VarChar(120)
-  model      String     @db.VarChar(120)
-  type       String     @db.VarChar(120)
-  capacity   Int
+  id       Int    @id @default(autoincrement())
+  brand    String @db.VarChar(120)
+  model    String @db.VarChar(120)
+  type     String @db.VarChar(120)
+  capacity Int
 
   excursions Excursion[]
 }
 
 model Photo {
-  id          Int        @id @default(autoincrement())
-  excursion   Excursion  @relation(fields: [excursionId], references: [id])
+  id          Int       @id @default(autoincrement())
+  excursion   Excursion @relation(fields: [excursionId], references: [id])
   excursionId Int
-  imageUrl    String     @db.VarChar(200)
-
-  
+  imageUrl    String    @db.VarChar(200)
 }
-
 
 enum StatusReserv {
   COMPLETE

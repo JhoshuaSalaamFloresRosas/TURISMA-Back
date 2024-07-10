@@ -99,6 +99,7 @@ model Payment {
   alreadyPay  Int?           @default(0)
   partialPay  Boolean?
   status      Boolean
+  paymentCompleted DateTime? 
 }
 
 model Transport {

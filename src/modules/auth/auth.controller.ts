@@ -22,15 +22,7 @@ export class AuthController {
   @UseGuards(AuthGuard('local'))
   @Post('/login')
   async login(@Request() req) {
-    const { user } = req;
-    
-    // Verificar si el correo electrónico está verificado
-    if (!user.isEmailVerified) {
-      throw new UnauthorizedException('El correo electrónico no ha sido verificado.');
-    }
-    
-    // Si el correo está verificado, proceder con el inicio de sesión
-    return this.authService.login(user);
+    return this.authService.login(req.user);
   }
 
   @Public()

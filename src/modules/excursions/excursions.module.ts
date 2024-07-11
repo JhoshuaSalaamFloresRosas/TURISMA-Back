@@ -8,6 +8,6 @@ import { AuthModule } from '../auth/auth.module';
 @Module({
   imports: [AuthModule],
   controllers: [ExcursionsController],
-  providers: [ExcursionsService, PrismaService,RolesGuard],
+  providers: [ExcursionsService, PrismaService, RolesGuard],
 })
 export class ExcursionsModule {}

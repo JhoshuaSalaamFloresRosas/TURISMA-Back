@@ -3,10 +3,12 @@ import { TransportsService } from './transports.service';
 import { CreateTransportDto } from './dto/create-transport.dto';
 import { UpdateTransportDto } from './dto/update-transport.dto';
 import { Public } from 'src/common/decorators/public.decorator';
+import { UseGuards } from '@nestjs/common';
+import { RolesGuard } from 'src/common/guards/roles.guard';
 
 @Controller('transports')
 export class TransportsController {
-  constructor(private readonly transportsService: TransportsService) {}
+  constructor(private readonly transportsService: TransportsService) { }
 
   @Public()
   @Post()
@@ -30,10 +32,9 @@ export class TransportsController {
     return this.transportsService.update(+id, updateTransportDto);
   }
 
-  @Public()
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @UseGuards(RolesGuard)
+  @Delete(':id/removeTransport')
+  removeTransport(@Param('id') id: string) {
     return this.transportsService.remove(+id);
   }
-
 }

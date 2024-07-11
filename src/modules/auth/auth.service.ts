@@ -155,7 +155,7 @@ export class AuthService {
     await this.usersService.updatePhone(userId, newPhone)
   }
 
-  async sendVerificationRecovery(userId: number): Promise<void> {
+  async sendVerificationPasswordRecovery(userId: number): Promise<void> {
     const user = await this.usersService.findById(userId);
 
     if (!user) {

@@ -98,9 +98,9 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Post('/send-verification-recovery')
-  async sendVerificationRecovery(@Request() req,){
+  async sendVerificationPasswordRecovery(@Request() req,){
     const userId = req.user.userId;
-    await this.authService.sendVerificationRecovery(userId);
+    await this.authService.sendVerificationPasswordRecovery(userId);
     return { message: 'Código de verificación enviado correctamente' };
   }
 

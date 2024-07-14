@@ -97,9 +97,9 @@ model Payment {
   date              DateTime?    @default(now())
   totalCost         Int
   alreadyPay        Int?         @default(0)
-  partialPay        Boolean?
-  status            Boolean
-  paymentCompleted  DateTime? 
+  partialPay        Boolean?     @default(false)
+  status            Boolean      @default(false)
+  dateCompleted  DateTime? 
   reference         String?      @db.VarChar(100)
 }
 

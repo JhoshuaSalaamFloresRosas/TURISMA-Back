@@ -25,7 +25,7 @@ export class EmailService {
       html: `<p>Haz clic en el siguiente enlace para verificar tu correo electrónico:</p><p><a href="${verificationUrl}">${verificationUrl}</a></p>`,
     };
     await this.transporter.sendMail(mailOptions);
-   }
+  }
 
   async sendVerificationEmail(to: string, token: string): Promise<void> {
     const mailOptions = {
@@ -51,30 +51,41 @@ export class EmailService {
     departureDate: Date,
     outPoint: string
   ): Promise<void> {
-    // Formatea la fecha y hora en español
-    const formatter = new Intl.DateTimeFormat('es-ES', {
-      dateStyle: 'full', // 'short', 'medium', 'long', 'full'
-      timeStyle: 'short' // 'short', 'medium', 'long'
-    });
-    const formattedDate = formatter.format(departureDate);
+
+   // Formatea la fecha y hora en español
+   const formatter = new Intl.DateTimeFormat('es-MX', {
+    dateStyle: 'full',
+    timeStyle: 'short',
+    hour12: true,
+    timeZone: 'UTC',
+  });
   
+    const formattedDate = formatter.format(departureDate);
+    
     // Formatea stopPoints como una lista HTML
     const stopPointsList = stopPoints.map(
       point => `<li>Parada: ${point.name}, Número: ${point.numStop}, Duración: ${point.duration}</li>`
     ).join('');
-  
+
     // Configura el correo electrónico
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to,
       subject: 'Gracias por su pago',
       html: `
-        <p>Gracias por su pago. Aquí están los detalles de su excursión:</p>
-        <p><strong>Excursión:</strong> ${excursion}</p>
-        <p><strong>Puntos de parada:</strong></p>
-        <ul>${stopPointsList}</ul>
-        <p><strong>Fecha y hora de salida:</strong> ${formattedDate}</p>
-        <p><strong>Punto de salida:</strong> ${outPoint}</p>
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+        <div style="background-color: #f5f5f5; padding: 20px; text-align: center;">
+          <img src="https://res.cloudinary.com/dhhbnvuhm/image/upload/v1720916301/DefaultProfile.jpg" alt="Logo de la empresa" style="display: block; margin: 0 auto 20px; width: 150px;">
+        </div>
+        <div style="padding: 20px;">
+          <p style="font-size: 18px; color: #333; margin: 0 0 20px;">Gracias por su pago. Aquí están los detalles de su excursión:</p>
+          <p style="font-size: 16px; color: #333; margin: 0 0 10px;"><strong>Excursión:</strong> ${excursion}</p>
+          <p style="font-size: 16px; color: #333; margin: 0 0 10px;"><strong>Puntos de parada:</strong></p>
+          <ul style="font-size: 16px; color: #333; padding-left: 20px; margin: 0 0 20px;">${stopPointsList}</ul>
+          <p style="font-size: 16px; color: #333; margin: 0 0 10px;"><strong>Fecha y hora de salida:</strong> ${formattedDate}</p>
+          <p style="font-size: 16px; color: #333; margin: 0 0 20px;"><strong>Punto de salida:</strong> ${outPoint}</p>
+        </div>
+      </div>
       `,
     };
 

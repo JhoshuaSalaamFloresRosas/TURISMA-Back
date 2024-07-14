@@ -41,8 +41,6 @@ export class PaymentsService {
     // Preparar los datos del nuevo pago
     const newData: Prisma.PaymentCreateInput = {
       totalCost: createPaymentDto.totalCost,
-      partialPay: createPaymentDto.partialPay,
-      status: createPaymentDto.status,
       reference: reference,
       reservation: { connect: { id: id } } // Conectar la reserva usando el ID
     };
@@ -85,7 +83,6 @@ export class PaymentsService {
       totalCost: createPaymentDto.totalCost,
       partialPay: true,
       alreadyPay: alreadyPay,
-      status: createPaymentDto.status,
       reference: reference,
       reservation: { connect: { id: id } } // Conectar la reserva usando el ID
     };
@@ -138,7 +135,7 @@ export class PaymentsService {
       },
       data: {
         status: true,
-        paymentCompleted: new Date()
+        dateCompleted: new Date()
       }
     })
   }

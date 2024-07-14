@@ -27,7 +27,17 @@ export class UsersService {
 
   //metodo para registrar usario 
 
+  async findByEmail(email: string): Promise<User | null> {
+    return this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+  }
+
+  //agegar la logica para que solo se pueda añadir los datos del dto
   async create(data: Prisma.UserCreateInput): Promise<User> {
+    
     return this.prisma.user.create({
       data,
     });
@@ -67,7 +77,7 @@ export class UsersService {
     return this.prisma.user.update({
       data:{
         name: user.name,
-        firstName: user.firstName
+        lastName: user.lastName
       },
       where: {
         id

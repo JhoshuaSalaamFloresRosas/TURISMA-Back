@@ -10,16 +10,15 @@ export class PaymentsController {
 
   @Public()
   @Post('complete/:id')
-  createComplete(@Param ('id', ParseIntPipe) id: number, @Body() createPaymentDto: CreatePaymentDto) {
-    createPaymentDto.reservationId = id
-    return this.paymentsService.createComplete(createPaymentDto);
+  async createComplete(@Param('id', ParseIntPipe) id: number, @Body() createPaymentDto: CreatePaymentDto) {
+    return this.paymentsService.createComplete(id, createPaymentDto);
   }
+
 
   @Public()
   @Post('partial/:id')
   createPartial(@Param ('id', ParseIntPipe) id: number, @Body() createPaymentDto: CreatePaymentDto) {
-    createPaymentDto.reservationId = id
-    return this.paymentsService.createPartial(createPaymentDto);
+    return this.paymentsService.createPartial(id, createPaymentDto);
   }
 
   @Public()

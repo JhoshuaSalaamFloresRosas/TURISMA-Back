@@ -13,21 +13,81 @@ export class PaymentsService {
               private emailService: EmailService
   ) {}
 
-  async createComplete(data: Prisma.PaymentCreateInput): Promise<Payment> {
+  async createComplete(id: number, createPaymentDto: CreatePaymentDto): Promise<Payment> {
+    // Buscar la reserva usando el ID proporcionado
+    const reservation = await this.prisma.reservation.findUnique({
+      where: { id: id },
+      include: {
+        excursion: true,
+        user: true
+      }
+    });
+
+    if (!reservation) {
+      throw new NotFoundException('Reservación no encontrada');
+    }
+
+    // Obtener detalles de la reserva
+    const excursionId = reservation.excursion.id;
+    const userId = reservation.user.id;
+    const reservationId = reservation.id;
+    const day = String(reservation.date.getDate()).padStart(2, '0'); // Obtener el día del mes con dos dígitos
+    const month = String(reservation.date.getMonth() + 1).padStart(2, '0'); // Mes en JavaScript es 0-based
+    const year = reservation.date.getFullYear(); // Obtener el año
+
+    // Crear una referencia para el pago
+    const reference = `${excursionId}-${userId}-${reservationId}-${day}-${month}-${year}`;
+
+    // Preparar los datos del nuevo pago
+    const newData: Prisma.PaymentCreateInput = {
+      totalCost: createPaymentDto.totalCost,
+      partialPay: createPaymentDto.partialPay,
+      status: createPaymentDto.status,
+      reference: reference,
+      reservation: { connect: { id: id } } // Conectar la reserva usando el ID
+    };
+
+    // Crear el nuevo pago en la base de datos
     return this.prisma.payment.create({
-      data,
-    })
+      data: newData
+    });
   }
 
-  async createPartial(data: Prisma.PaymentCreateInput): Promise<Payment> {
+  async createPartial(id: number, createPaymentDto: CreatePaymentDto): Promise<Payment> {
+    // Buscar la reserva usando el ID proporcionado
+    const reservation = await this.prisma.reservation.findUnique({
+      where: { id: id },
+      include: {
+        excursion: true,
+        user: true
+      }
+    });
+
+    if (!reservation) {
+      throw new NotFoundException('Reservación no encontrada');
+    }
+
+    // Obtener detalles de la reserva
+    const excursionId = reservation.excursion.id;
+    const userId = reservation.user.id;
+    const reservationId = reservation.id;
+    const day = String(reservation.date.getDate()).padStart(2, '0'); // Obtener el día del mes con dos dígitos
+    const month = String(reservation.date.getMonth() + 1).padStart(2, '0'); // Mes en JavaScript es 0-based
+    const year = reservation.date.getFullYear(); // Obtener el año
+
+    // Crear una referencia para el pago
+    const reference = `${excursionId}-${userId}-${reservationId}-${day}-${month}-${year}`;
 
     //funcion para hacer el calculo por hacientos, aqui va a ir
-    const alreadyPay = data.totalCost * 0.5;
+    const alreadyPay = createPaymentDto.totalCost * 0.5;
 
     const newData: Prisma.PaymentCreateInput = {
-      ...data,
+      totalCost: createPaymentDto.totalCost,
       partialPay: true,
       alreadyPay: alreadyPay,
+      status: createPaymentDto.status,
+      reference: reference,
+      reservation: { connect: { id: id } } // Conectar la reserva usando el ID
     };
   
     return this.prisma.payment.create({
@@ -36,7 +96,7 @@ export class PaymentsService {
   }
 
   async updateStatus(id): Promise<Payment>{
-    const user = await this.prisma.payment.findUnique({
+    const payment = await this.prisma.payment.findUnique({
       where: { id: id },
       include: {
         reservation: {
@@ -52,18 +112,12 @@ export class PaymentsService {
       },
     });
 
-    const email = user.reservation.user.email
-    const excursion = user.reservation.excursion.name
-    const stopPoints = user.reservation.excursion.stopPoints
-    const departureDate = user.reservation.excursion.departureDate
-    const outPoint = user.reservation.excursion.outPoint
+    const email = payment.reservation.user.email
+    const excursion = payment.reservation.excursion.name
+    const stopPoints = payment.reservation.excursion.stopPoints
+    const departureDate = payment.reservation.excursion.departureDate
+    const outPoint = payment.reservation.excursion.outPoint
     await this.emailService.sendVerificationPay(email, excursion, stopPoints, departureDate, outPoint);
-
-    const payment = await this.prisma.payment.findUnique({
-      where:{
-        id
-      }
-    })
 
     if(!payment){
       throw new NotFoundException('Pago no encontrado')
@@ -78,15 +132,13 @@ export class PaymentsService {
       },
     });
 
-    const now = new Date();
-
     return this.prisma.payment.update({
       where: {
         id
       },
       data: {
         status: true,
-        paymentCompleted: now
+        paymentCompleted: new Date()
       }
     })
   }

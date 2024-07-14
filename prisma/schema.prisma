@@ -91,15 +91,16 @@ model Activity {
 }
 
 model Payment {
-  id          Int        @id @default(autoincrement())
-  reservation   Reservation? @relation(fields: [reservationId], references: [id])
-  reservationId Int?         @unique
-  date        DateTime?      @default(now())
-  totalCost   Int
-  alreadyPay  Int?           @default(0)
-  partialPay  Boolean?
-  status      Boolean
-  paymentCompleted DateTime? 
+  id                Int          @id @default(autoincrement())
+  reservation       Reservation? @relation(fields: [reservationId], references: [id])
+  reservationId     Int?         @unique
+  date              DateTime?    @default(now())
+  totalCost         Int
+  alreadyPay        Int?         @default(0)
+  partialPay        Boolean?
+  status            Boolean
+  paymentCompleted  DateTime? 
+  reference         String?      @db.VarChar(100)
 }
 
 model Transport {

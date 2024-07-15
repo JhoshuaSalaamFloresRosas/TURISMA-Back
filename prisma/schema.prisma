@@ -17,12 +17,12 @@ model User {
   id                Int           @id @default(autoincrement())
   name              String        @db.VarChar(120)
   password          String        @db.VarChar(120)
-  firstName         String        @db.VarChar(120)
+  lastName          String        @db.VarChar(120)
   phone             String        @db.VarChar(20)
   email             String        @unique @db.VarChar(120)
   admin             Boolean?      @default(false)
   actvie            Boolean?      @default(true)
-  userPhoto         String?       @default("defaultUser.png") @db.Text
+  userPhoto         String?       @default("https://res.cloudinary.com/dhhbnvuhm/image/upload/v1720916301/DefaultProfile.jpg") @db.Text
   verificationToken String?       @db.VarChar(120)
   isEmailVerified   Boolean       @default(false)
   reservations      Reservation[]

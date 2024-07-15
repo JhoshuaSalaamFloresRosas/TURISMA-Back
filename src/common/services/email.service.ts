@@ -37,4 +37,15 @@ export class EmailService {
 
     await this.transporter.sendMail(mailOptions);
   }
+
+  async sendVerificationPhone(to: string, token: string): Promise<void> {
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to,
+      subject: 'Verificación de cambio de Telefono',
+      text: `Su código de verificación es: ${token}`,
+    };
+
+    await this.transporter.sendMail(mailOptions);
+  }
 }

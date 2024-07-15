@@ -37,9 +37,9 @@ model Reservation {
   excursion    Excursion    @relation(fields: [excursionId], references: [id])
   excursionId  Int
   date         DateTime     @default(now())
-  payment      Payment      @relation(fields: [paymentId], references: [id])
-  paymentId    Int
   statusReserv StatusReserv @default(PENDING)
+  
+  payment      Payment[]
   seats        Seat[]
 }
 
@@ -102,13 +102,16 @@ model Activity {
 }
 
 model Payment {
-  id          Int           @id @default(autoincrement())
-  reservation Reservation[]
-  date        DateTime?
-  totalCost   Int
-  alreadyPay  Int?
-  partialPay  Boolean?
-  status      Boolean
+  id                Int          @id @default(autoincrement())
+  reservation       Reservation? @relation(fields: [reservationId], references: [id])
+  reservationId     Int?         @unique
+  date              DateTime?    @default(now())
+  totalCost         Int
+  alreadyPay        Int?         @default(0)
+  partialPay        Boolean?     @default(false)
+  status            Boolean      @default(false)
+  dateCompleted     DateTime? 
+  reference         String?      @db.VarChar(100)
 }
 
 model Transport {

@@ -11,9 +11,10 @@ import { PaymentsModule } from './modules/payments/payments.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { PhotosModule } from './modules/photos/photos.module';
 import { StoppointsModule } from './modules/stoppoints/stoppoints.module';
+import { ActivitiesModule } from './modules/activities/activities.module';
 
 @Module({
-  imports: [UsersModule, ReservationsModule, ExcursionsModule, TransportsModule, PaymentsModule, AuthModule, PhotosModule, StoppointsModule],
+  imports: [UsersModule, ReservationsModule, ExcursionsModule, TransportsModule, PaymentsModule, AuthModule, PhotosModule, StoppointsModule, ActivitiesModule],
   controllers: [AppController],
   providers: [
     {

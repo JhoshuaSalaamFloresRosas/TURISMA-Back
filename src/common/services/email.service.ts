@@ -102,4 +102,26 @@ export class EmailService {
 
     await this.transporter.sendMail(mailOptions);
   }
+
+  async sendReservationDetails(to: string, excursionName: string): Promise<void> {
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to,
+      subject: 'Detalles de tu reservación',
+      text: `Reservación a ${excursionName} hecha, muchas gracias. No olvides pagar tu reservación dentro de las 48 horas o será cancelada y perderás tus asientos.`,
+    };
+
+    await this.transporter.sendMail(mailOptions);
+  }
+  
+  async sendCancellationEmail(to: string, excursionName: string): Promise<void> {
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to,
+      subject: 'Cancelación de reservación',
+      text: `Tu reservación para la excursión ${excursionName} ha sido cancelada.`,
+    };
+
+    await this.transporter.sendMail(mailOptions);
+  }
 }

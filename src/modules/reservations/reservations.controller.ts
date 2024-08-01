@@ -1,34 +1,50 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller('reservations')
 export class ReservationsController {
   constructor(private readonly reservationsService: ReservationsService) {}
 
-  @Post()
-  create(@Body() createReservationDto: CreateReservationDto) {
-    return this.reservationsService.create(createReservationDto);
+  @UseGuards(JwtAuthGuard)
+  @Post(':excursionId')
+  create(@Param('excursionId') excursionId: string, @Req() req, @Body() createReservationDto: CreateReservationDto ) {
+    const userId = req.user.userId;
+    return this.reservationsService.create(userId, +excursionId, createReservationDto);
   }
 
+  /**
+   * Obtener las reservaciones del usuario
+   * @returns 
+   */
+  @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
-    return this.reservationsService.findAll();
+  findAll(@Req() req) {
+    const userId = req.user.userId;
+    return this.reservationsService.findAll(userId);
   }
 
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.reservationsService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateReservationDto: UpdateReservationDto) {
-    return this.reservationsService.update(+id, updateReservationDto);
+  @Public()
+  @Get(':id/time-until-excursion')
+  async getTimeUntilExcursion(@Param('id') id: string) {
+    return this.reservationsService.getTimeUntilExcursion(+id);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.reservationsService.remove(+id);
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/cancel')
+  async cancelReservation(
+    @Param('id') id: string, 
+    @Body('email') email: string
+  ) {
+    return this.reservationsService.cancelReservation(+id, email);
   }
 }

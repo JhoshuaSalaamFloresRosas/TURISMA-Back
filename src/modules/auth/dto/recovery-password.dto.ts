@@ -1,10 +1,6 @@
 import { IsString, IsNotEmpty, MinLength, Matches } from 'class-validator';
 
-export class ChangePasswordDto {
-  @IsString()
-  @IsNotEmpty()
-  oldPassword: string;
-
+export class RecoveryPasswordDto {
   @IsString({ message: 'La contraseña debe ser una cadena de caracteres.' })
   @MinLength(8, { message: 'La contraseña debe tener al menos 8 caracteres.' })
   @Matches(/(?=.*[a-z])/, { message: 'La contraseña debe incluir al menos una letra minúscula.' })

@@ -14,7 +14,7 @@ import { StoppointsModule } from './modules/stoppoints/stoppoints.module';
 import { ActivitiesModule } from './modules/activities/activities.module';
 
 @Module({
-  imports: [UsersModule, ReservationsModule, ExcursionsModule, TransportsModule, PaymentsModule, AuthModule, PhotosModule, StoppointsModule, ActivitiesModule],
+  imports: [ReservationsModule, ExcursionsModule, AuthModule],
   controllers: [AppController],
   providers: [
     {

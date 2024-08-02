@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../../prisma.service';
 import { Prisma, Reservation } from '@prisma/client';
-import { EmailService } from 'src/common/services/email.service';
+import { EmailService } from '../../common/services/email.service';
 
 @Injectable()
 export class ReservationsService {
@@ -107,7 +107,7 @@ export class ReservationsService {
   async findOne(id: number): Promise<Reservation> {
     const reservation = await this.prisma.reservation.findUnique({where:{id: id}})
     if (!reservation){
-      throw new NotFoundException("No encontrado");
+      throw new NotFoundException("Reservación no encontrada");
     }
     return reservation;
   }

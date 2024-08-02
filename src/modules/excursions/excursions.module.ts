@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ExcursionsService } from './excursions.service';
 import { ExcursionsController } from './excursions.controller';
-import { PrismaService } from 'src/prisma.service';
-import { RolesGuard } from 'src/common/guards/roles.guard';
+import { PrismaService } from '../../prisma.service';
+import { RolesGuard } from '../../common/guards/roles.guard';
 import { AuthModule } from '../auth/auth.module';
 
 @Module({

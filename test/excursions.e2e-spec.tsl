@@ -1,0 +1,141 @@
+import { Test, TestingModule } from '@nestjs/testing';
+import { AppModule } from '../src/app.module';
+import { INestApplication } from '@nestjs/common';
+import * as request from 'supertest';
+import { PrismaService } from '../src/prisma.service'; // Asegúrate de importar PrismaService
+
+let app: INestApplication;
+let prisma: PrismaService;
+let jwtToken: string;
+let excursionId: number;
+
+beforeAll(async () => {
+  const moduleFixture: TestingModule = await Test.createTestingModule({
+    imports: [AppModule],
+  }).compile();
+
+  app = moduleFixture.createNestApplication();
+  prisma = app.get(PrismaService);
+  await app.init();
+
+  // Autenticación para obtener el token JWT
+  const response = await request(app.getHttpServer())
+    .post('/auth/login')
+    .send({ username: process.env.TEST_USER, password: process.env.TEST_PASSWORD });
+
+  jwtToken = response.body.access_token;
+
+  // Crear una excursión de prueba
+  const excursion = await prisma.excursion.create({
+    data: {
+      name: "TEST EXCURSION",
+      description: "Disfruta de un día relajante en una hermosa playa con actividades acuáticas.",
+      departureDate: "2024-08-10T07:00:00.000Z",
+      arrivalDate: "2024-08-10T19:00:00.000Z",
+      price: 75.00,
+      duration: "1 día",
+      outPoint: "Punto de salida en el centro de la ciudad",
+      status: "PENDING",
+    },
+  });
+
+  excursionId = excursion.id;
+});
+
+afterAll(async () => {
+  // Limpiar la base de datos después de las pruebas
+  await prisma.excursion.deleteMany({});
+  await app.close();
+});
+
+describe('Excursiones e2e', () => {
+  it('Debería obtener todas las excursiones (usuario autenticado)', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/excursions')
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .expect(200);
+
+    expect(response.body).toBeInstanceOf(Array);
+  });
+
+  it('Debería devolver un estatus 401 sin token JWT (get /excursions)', async () => {
+    await request(app.getHttpServer())
+      .get('/excursions')
+      .expect(401);
+  });
+
+  it('Debería obtener una excursión específica (usuario autenticado)', async () => {
+    const response = await request(app.getHttpServer())
+      .get(`/excursions/${excursionId}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .expect(200);
+
+    expect(response.body).toHaveProperty('name', 'TEST EXCURSION');
+  });
+
+  it('Debería devolver un estatus 404 si la excursión no existe', async () => {
+    await request(app.getHttpServer())
+      .get('/excursions/999999')
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .expect(404)
+      .expect({
+        message: 'Excursion no encontrada',
+        error: 'Not Found',
+        statusCode: 404
+      });
+  });
+
+  it('Debería devolver un estatus 401 sin token JWT (get /excursion/{id})', async () => {
+    await request(app.getHttpServer())
+      .get(`/excursions/${excursionId}`)
+      .expect(401);
+  });
+
+  it('Debería crear una excursión (usuario administrador)', async () => {
+    await request(app.getHttpServer())
+      .post('/excursions')
+      .set('Authorization', `Bearer ${jwtToken}`) // Asegúrate de que el usuario tenga permisos de administrador
+      .send({
+        name: "New Excursion",
+        description: "Descripción de la nueva excursión",
+        departureDate: "2024-08-12T07:00:00.000Z",
+        arrivalDate: "2024-08-12T19:00:00.000Z",
+        price: 100.00,
+        duration: "1 día",
+        outPoint: "Punto de salida en la playa",
+        status: "PENDING",
+      })
+      .expect(201)
+      .expect({ message: 'La excursión ha sido agregada exitosamente' });
+  });
+
+  it('Debería devolver un estatus 401 al crear una excursión como usuario autenticado', async () => {
+    await request(app.getHttpServer())
+      .post('/excursions')
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .send({
+        name: "Unauthorized Excursion",
+        description: "Descripción de la excursión no autorizada",
+        departureDate: "2024-08-13T07:00:00.000Z",
+        arrivalDate: "2024-08-13T19:00:00.000Z",
+        price: 120.00,
+        duration: "1 día",
+        outPoint: "Punto de salida en el centro",
+        status: "PENDING",
+      })
+      .expect(401)
+      .expect({ message: 'No tiene permisos para realizar esta acción' });
+  });
+
+  it('Debería cancelar una excursión pendiente y sin reservaciones', async () => {
+    await request(app.getHttpServer())
+      .delete(`/excursions/${excursionId}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .expect(200)
+      .expect({ message: 'La excursión ha sido cancelada exitosamente' });
+  });
+
+ 
+
+  
+});

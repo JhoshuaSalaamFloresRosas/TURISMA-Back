@@ -3,9 +3,9 @@ import { ExcursionsService } from './excursions.service';
 import { CreateExcursionDto } from './dto/create-excursion.dto';
 import { UpdateExcursionStatusDto } from './dto/update-excursion-status.dto';
 import { UpdateExcursionDto } from './dto/update-excursion.dto';
-import { Public } from 'src/common/decorators/public.decorator';
-import { RolesGuard } from 'src/common/guards/roles.guard';
-import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { Public } from '../../common/decorators/public.decorator';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 
 @Controller('excursions')
 export class ExcursionsController {
@@ -15,7 +15,7 @@ export class ExcursionsController {
    * Funcion para mostrar informacion resumidad de las excursioens
    * @returns 
    */
-  @Public()
+  @UseGuards(JwtAuthGuard)
   @Get()
   findAll() {
     return this.excursionsService.findAll();
@@ -25,7 +25,7 @@ export class ExcursionsController {
    * @param id 
    * @returns 
    */
-  @Public()
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.excursionsService.findOne(+id);

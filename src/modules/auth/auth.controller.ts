@@ -1,12 +1,12 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post, Query, Request, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query, Request, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
-import { Public } from 'src/common/decorators/public.decorator';
+import { Public } from '../../common/decorators/public.decorator';
 import { ChangePasswordDto } from './dto/change-password.dto';
-import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { UpdateUserDto } from '../users/dto/update-user.dto';
 import { ChangePhoneDto } from './dto/change-phone.dto';
 import { RecoveryPasswordDto } from './dto/recovery-password.dto';
@@ -20,6 +20,7 @@ export class AuthController {
 
   @Public()
   @UseGuards(AuthGuard('local'))
+  @HttpCode(200)
   @Post('/login')
   async login(@Request() req) {
     return this.authService.login(req.user);
@@ -47,7 +48,7 @@ export class AuthController {
   async update(@Request() req, @Body() updateUserDto: UpdateUserDto) {
     const userId = req.user.userId;
     await this.usersService.update(userId, updateUserDto);
-    return {message: 'Usuario actualizado'}
+    return {message: 'Usuario actualizado.'}
   }
 
   
@@ -64,7 +65,7 @@ export class AuthController {
   async changePassword(@Request() req, @Body() changePasswordDto: ChangePasswordDto) {
     const userId = req.user.userId;
     await this.authService.changePassword(userId, changePasswordDto);
-    return { message: 'Contraseña cambiada correctamente' };
+    return { message: 'Contraseña cambiada correctamente.' };
   }
 
   @UseGuards(JwtAuthGuard)

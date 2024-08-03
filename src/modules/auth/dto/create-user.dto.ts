@@ -11,12 +11,12 @@ export class CreateUserDto {
     { message: 'La contraseña debe incluir al menos una letra minúscula, una letra mayúscula, un número y un carácter especial.' })
   password: string;
 
-  @IsString({ message: 'El primer nombre debe ser una cadena de caracteres.' })
-  @IsNotEmpty({ message: 'El primer nombre es obligatorio.' })
+  @IsString({ message: 'El apelido debe ser una cadena de caracteres.' })
+  @IsNotEmpty({ message: 'El apellido es obligatorio.' })
   lastName: string;
 
   @IsString({ message: 'El teléfono debe ser una cadena de caracteres.' })
-  @Matches(/^[+]?[0-9]+$/, { message: 'El teléfono debe contener solo números y opcionalmente comenzar con "+".' })
+  @Matches(/^[+]?[0-9]+$/, { message: 'El teléfono debe contener solo números y comenzar con "+".' })
   @IsNotEmpty({ message: 'El teléfono es obligatorio.' })
   phone: string;
 

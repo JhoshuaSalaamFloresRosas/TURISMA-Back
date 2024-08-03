@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { PhotosService } from './photos.service';
 import { PhotosController } from './photos.controller';
-import { PrismaService } from 'src/prisma.service';
-import { UploadService } from 'src/common/services/upload.service';
-import { cloudinary } from 'src/common/services/cloudinary.config';
+import { PrismaService } from '../../prisma.service';
+import { UploadService } from '../../common/services/upload.service';
+import { cloudinary } from '../../common/services/cloudinary.config';
 
 @Module({
   controllers: [PhotosController],

@@ -1,8 +1,7 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { UsersService } from 'src/modules/users/users.service';
+import { UsersService } from '../../modules/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-
 import { EmailService } from '../../common/services/email.service';
 import { SmsService } from '../../common/services/sms.service';
 import { v4 as uuidv4 } from 'uuid';
@@ -25,7 +24,7 @@ export class AuthService {
 
     // Verificar si el usuario existe
     if (!user) {
-      throw new UnauthorizedException('Correo electronico no encontrado');
+      throw new UnauthorizedException('Credenciales invalidas');
     }
 
     // Verificar si el correo electrónico está verificado
@@ -36,7 +35,7 @@ export class AuthService {
     // Verificar la contraseña
     const isPasswordValid = await bcrypt.compare(pass, user.password);
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Contraseña incorrecta');
+      throw new UnauthorizedException('Credenciales invalidas');
     }
 
     // Si todo está correcto, devolver el usuario sin la contraseña

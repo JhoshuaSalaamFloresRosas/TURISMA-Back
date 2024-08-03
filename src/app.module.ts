@@ -10,17 +10,16 @@ import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { PhotosModule } from './modules/photos/photos.module';
+import { StoppointsModule } from './modules/stoppoints/stoppoints.module';
 
 @Module({
-  imports: [UsersModule, ReservationsModule, ExcursionsModule, TransportsModule, PaymentsModule, AuthModule, PhotosModule],
+  imports: [UsersModule, ReservationsModule, ExcursionsModule, TransportsModule, PaymentsModule, AuthModule, PhotosModule, StoppointsModule],
   controllers: [AppController],
   providers: [
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard
     },
-    AppService,
-    
-    ],
+    AppService,],
 })
 export class AppModule {}

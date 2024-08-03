@@ -17,10 +17,11 @@ import { SmsService } from '../../common/services/sms.service';
     PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET, // Cambia esto a una variable de entorno en producción
-      signOptions: { expiresIn: '60m' },
+      signOptions: { expiresIn: '1440m' },
     }),
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy, PrismaService, UsersService, EmailService, SmsService],
   controllers: [AuthController],
+  exports: [JwtModule],
 })
 export class AuthModule {}

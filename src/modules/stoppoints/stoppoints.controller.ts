@@ -1,30 +1,35 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
 import { StoppointsService } from './stoppoints.service';
 import { CreateStoppointDto } from './dto/create-stoppoint.dto';
 import { UpdateStoppointDto } from './dto/update-stoppoint.dto';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller('stoppoints')
 export class StoppointsController {
   constructor(private readonly stoppointsService: StoppointsService) {}
 
-  @Post()
-  create(@Body() createStoppointDto: CreateStoppointDto) {
-    return this.stoppointsService.create(createStoppointDto);
+  @Public()
+  @Post(':id')
+  create(@Param('id', ParseIntPipe) id: number ,@Body() createStoppointDto: CreateStoppointDto) {
+    return this.stoppointsService.create(id, createStoppointDto);
   }
 
+  @Public()
   @Get()
   findAll() {
     return this.stoppointsService.findAll();
   }
 
+  @Public()
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.stoppointsService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.stoppointsService.findOne(id);
   }
 
+  @Public()
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateStoppointDto: UpdateStoppointDto) {
-    return this.stoppointsService.update(+id, updateStoppointDto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateStoppointDto: UpdateStoppointDto) {
+    return this.stoppointsService.update(id, updateStoppointDto);
   }
 
   @Delete(':id')

@@ -1,6 +1,8 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty, MinLength, Matches } from 'class-validator';
 
 export class RecoveryPasswordDto {
+  @ApiProperty()
   @IsString({ message: 'La contraseña debe ser una cadena de caracteres.' })
   @MinLength(8, { message: 'La contraseña debe tener al menos 8 caracteres.' })
   @Matches(/(?=.*[a-z])/, { message: 'La contraseña debe incluir al menos una letra minúscula.' })
@@ -9,6 +11,7 @@ export class RecoveryPasswordDto {
   @Matches(/(?=.*[@$!%*?&])/, { message: 'La contraseña debe incluir al menos un carácter especial.' })
   newPassword: string;
 
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   token: string;

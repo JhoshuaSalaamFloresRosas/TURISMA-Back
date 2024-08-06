@@ -1,8 +1,8 @@
 import { Controller, Post, UploadedFile, UseInterceptors, UseGuards, Request } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadService } from '../../common/services/upload.service';
-import { PrismaService } from 'src/prisma.service';
-import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { PrismaService } from '../../prisma.service';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 
 
 @Controller('photos')
@@ -22,6 +22,6 @@ export class PhotosController {
       where: { id: userId },
       data: { userPhoto: result.secure_url },
     });
-    return { message: 'User photo uploaded successfully', url: result.secure_url };
+    return { message: 'La foto de usuario se ha cargado con éxito'};
   }
 }

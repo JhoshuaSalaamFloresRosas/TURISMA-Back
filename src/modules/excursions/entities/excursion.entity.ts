@@ -2,7 +2,7 @@ import { Excursion, StatusExcur } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
 import { Transport } from './transport.entity';
-import { Reservation } from './reservation.entity';
+import { Reservation } from '../../reservations/entities/reservation.entity';
 import { StopPoint } from './stop-point.entity';
 import { Photo } from './photo.entity';
 import { LikeEntity } from '../entities/like.entity';

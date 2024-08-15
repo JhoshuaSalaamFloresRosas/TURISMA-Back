@@ -1,10 +1,10 @@
 import { Excursion, StatusExcur } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
-import { Transport } from './transport.entity';
+//import { Transport } from './transport.entity';
 import { Reservation } from '../../reservations/entities/reservation.entity';
 import { StopPoint } from '../../stoppoints/entities/stoppoint.entity';
-import { Photo } from './photo.entity';
+//import { Photo } from './photo.entity';
 import { LikeEntity } from '../entities/like.entity';
 
 export class ExcursionEntity implements Excursion {
@@ -75,18 +75,18 @@ export class ExcursionEntity implements Excursion {
   })
   likes: number;
 
-  @ApiProperty({description:"Transporte asignado", type: () => Transport })
+ /* @ApiProperty({description:"Transporte asignado", type: () => Transport })
   transport: Transport;
-
+*/
   @ApiProperty({description:"Reservaciones", type: () => [Reservation] })
   reservations: Reservation[];
 
   @ApiProperty({description:"Paradas", type: () => [StopPoint] })
   stopPoints: StopPoint[];
-
+/*
   @ApiProperty({description:"Fotos", type: () => [Photo] })
   photos: Photo[];
-
+*/
   @ApiProperty({description:"Likes de la excursion", type: () => [LikeEntity] })
   likesList: LikeEntity[];
 

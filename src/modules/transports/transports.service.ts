@@ -19,22 +19,27 @@ export class TransportsService {
     return this.prisma.transport.findMany()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} transport`;
+  async findOne(id: number): Promise<Transport | null>{
+    return  this.prisma.transport.findUnique({
+      where:{id},
+    }); 
   }
 
-  update(id: number, updateTransportDto: UpdateTransportDto) {
-    return `This action updates a #${id} transport`;
+  async update(id: number, updateTransportDto: UpdateTransportDto):Promise<Transport | null>{
+    return this.prisma.transport.update({
+      where:{id},
+      data: updateTransportDto,
+    });
   }
 
 
-  async remove(id: number) {
+  async remove(id: number): Promise<{success:boolean; message: string}> {
     try {
       // Verificar si el transporte tiene relaciones con excursiones
       const relatedExcursions = await this.prisma.excursion.findMany({
         where: {
-          transportId: id
-        }
+          transportId: id,
+        },
       });
   
       // Si hay registros relacionados, no permitir la eliminación

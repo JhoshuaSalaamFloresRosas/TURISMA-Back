@@ -15,4 +15,3 @@ export class CreateActivityDto {
     @IsNotEmpty({message: 'El campo descripción no puede estar vacío'})
     description: string
 }
-

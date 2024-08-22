@@ -10,4 +10,3 @@ export class Activity {
         @ApiProperty({ example: 'Descripción de la actividad' })
         description: string
     }
-

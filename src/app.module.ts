@@ -12,12 +12,9 @@ import { AuthModule } from './modules/auth/auth.module';
 import { PhotosModule } from './modules/photos/photos.module';
 import { StoppointsModule } from './modules/stoppoints/stoppoints.module';
 import { ActivitiesModule } from './modules/activities/activities.module';
-import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({ isGlobal: true}),
-    UsersModule, ReservationsModule, ExcursionsModule, TransportsModule, PaymentsModule, AuthModule, PhotosModule, StoppointsModule, ActivitiesModule],
+  imports: [UsersModule, ReservationsModule, ExcursionsModule, TransportsModule, PaymentsModule, AuthModule, PhotosModule, StoppointsModule, ActivitiesModule],
   controllers: [AppController],
   providers: [
     {

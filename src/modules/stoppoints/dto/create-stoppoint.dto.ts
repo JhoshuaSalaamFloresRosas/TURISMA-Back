@@ -4,14 +4,14 @@ import { ApiProperty } from "@nestjs/swagger";
 export class CreateStoppointDto {
   
   @ApiProperty({
-    description: 'Latitud y longitud',
-    example: '18.603974,-98.483315'
+    description: 'Nombre de la parada',
+    example: 'Calle de los muertos'
   })
   @IsNotEmpty({message: 'el campo nombre no puede estar vacio'})
   name: string;
 
   @ApiProperty({
-    description: 'Número de la parada',
+    description: 'Número de la parada(filtro de orden)',
     example: 1
   })
   @IsNotEmpty({message: 'el campo numero de parada no puede estar vacio'})

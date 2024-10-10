@@ -20,6 +20,8 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api',app,document);
 
+  console.log('Memory usage at startup:', process.memoryUsage());
+
   await app.listen(process.env.PORT || 3000);
 }
 

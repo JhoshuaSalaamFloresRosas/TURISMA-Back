@@ -1,13 +1,17 @@
+import { ApiProperty } from "@nestjs/swagger"
 import { IsNotEmpty, IsNumber } from "class-validator"
 
 export class CreateActivityDto {
-    @IsNotEmpty({message: 'el campo nombre no puede estar vacio'})
+    @ApiProperty({ required: true, description: "Nombre de la actividad" })
+    @IsNotEmpty({message: 'El campo nombre no puede estar vacio'})
     name:      string 
 
-    @IsNotEmpty({message: 'el campo numero de actividad no puede estar vacio'})
-    @IsNumber({}, {message: 'el campo es de tipo numerico'})
+    @ApiProperty({ required: true, description: "Número de la actividad" })
+    @IsNotEmpty({message: 'El campo número de actividad no puede estar vacío'})
+    @IsNumber({}, {message: 'El campo es de tipo numerico'})
     numActivity: number
 
-    @IsNotEmpty({message: 'el campo descripcion no puede estar vacio'})
+    @ApiProperty({ required: true, description: "Descripción de la actividad" })
+    @IsNotEmpty({message: 'El campo descripción no puede estar vacío'})
     description: string
 }

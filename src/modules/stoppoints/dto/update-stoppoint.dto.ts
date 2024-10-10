@@ -5,8 +5,8 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateStoppointDto extends PartialType(CreateStoppointDto) {
     @ApiProperty({
-        description: 'Latitud y longitud',
-        example: '18.603974,-98.483315'
+        description: 'Nombre de la parada',
+        example: 'Oxxo'
       })
       @IsNotEmpty({message: 'el campo nombre no puede estar vacio'})
       name: string;

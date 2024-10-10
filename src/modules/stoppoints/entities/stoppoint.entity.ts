@@ -4,7 +4,7 @@ export class StopPoint {
   @ApiProperty({ example: 1 })
   id: number;
 
-  @ApiProperty({ example: 'Punto de parada 1' })
+  @ApiProperty({ example: 'Calle de los textiles' })
   name: string;
 
   @ApiProperty({ example: 1 })

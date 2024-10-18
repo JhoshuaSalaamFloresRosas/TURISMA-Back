@@ -8,6 +8,8 @@ import { JwtStrategy } from './strategies/JwtStrategy.strategy';
 import { AuthController } from './auth.controller';
 import { PrismaService } from '../../prisma.service';
 import { UsersService } from '../users/users.service';
+import { EmailService } from '../../common/services/email.service';
+import { SmsService } from '../../common/services/sms.service';
 
 @Module({
   imports: [
@@ -15,10 +17,11 @@ import { UsersService } from '../users/users.service';
     PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET, // Cambia esto a una variable de entorno en producción
-      signOptions: { expiresIn: '60m' },
+      signOptions: { expiresIn: '1440m' },
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy, PrismaService, UsersService],
+  providers: [AuthService, LocalStrategy, JwtStrategy, PrismaService, UsersService, EmailService, SmsService],
   controllers: [AuthController],
+  exports: [JwtModule],
 })
 export class AuthModule {}

@@ -9,15 +9,21 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { PhotosModule } from './modules/photos/photos.module';
+import { StoppointsModule } from './modules/stoppoints/stoppoints.module';
+import { ActivitiesModule } from './modules/activities/activities.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [UsersModule, ReservationsModule, ExcursionsModule, TransportsModule, PaymentsModule, AuthModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true}),
+    UsersModule, ReservationsModule, ExcursionsModule, TransportsModule, PaymentsModule, AuthModule, PhotosModule, StoppointsModule, ActivitiesModule],
   controllers: [AppController],
   providers: [
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard
     },
-    AppService],
+    AppService,],
 })
 export class AppModule {}

@@ -20,11 +20,12 @@ export class CreateUserDto {
   @IsNotEmpty({ message: 'El apellido es obligatorio.' })
   lastName: string;
 
-  @ApiProperty({required: true, description: "Numero telefonico del usuario"})
+  @ApiProperty({ required: true, description: "Número telefónico del usuario" })
   @IsString({ message: 'El teléfono debe ser una cadena de caracteres.' })
-  @Matches(/^[+]?[0-9]+$/, { message: 'El teléfono debe contener solo números y comenzar con "+".' })
+  @Matches(/^\+[0-9]+$/, { message: 'El teléfono debe contener solo números y comenzar con "+".' })
   @IsNotEmpty({ message: 'El teléfono es obligatorio.' })
   phone: string;
+
 
   @ApiProperty({required: true, description: "Correo electronico del usuario"})
   @IsEmail({}, { message: 'El correo electrónico debe ser una dirección de correo válida.' })

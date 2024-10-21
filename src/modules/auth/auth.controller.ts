@@ -141,13 +141,12 @@ export class AuthController {
     schema: {
       type: 'object',
       properties: {
-        method: {
+        email: {
           type: 'string',
-          example: 'email',
           description: 'Se requiere proporcionar un correo electrónico para la eliminación.',
         },
       },
-      required: ['method'],
+      required: ['email'],
     },
   })
   @ApiOkResponse({

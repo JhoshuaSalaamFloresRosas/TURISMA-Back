@@ -109,11 +109,11 @@ export class AuthController {
       },
     },
   })
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
+  @Public()
   @Post('send-verification')
-  async sendVerification(@Request() req, @Body('method') method: 'email' | 'sms') {
-    const userId = req.user.userId;
-    await this.authService.sendVerification(userId, method);
+  async sendVerification(@Body('method') method: 'email' | 'sms', @Body("email") email: string) {
+    await this.authService.sendVerification(email, method);
     return { message: 'Código de verificación enviado correctamente.' };
   }
 
@@ -128,11 +128,11 @@ export class AuthController {
       },
     },
   })
-  @UseGuards(JwtAuthGuard)
+  @Public()
   @Patch('change-password')
-  async changePassword(@Request() req, @Body() changePasswordDto: ChangePasswordDto) {
-    const userId = req.user.userId;
-    await this.authService.changePassword(userId, changePasswordDto);
+  async changePassword(@Body() changePasswordDto: ChangePasswordDto, @Body('email') email: string) {
+    //const userId = req.user.userId;
+    await this.authService.changePassword(email, changePasswordDto);
     return { message: 'Contraseña cambiada correctamente.' };
   }
 

@@ -81,15 +81,15 @@ export class AuthService {
 
   ///////Ajusta el servicio de autenticación para manejar el envío dinámico de tokens y la verificación:
 
-  async sendVerification(userId: number, method: 'email' | 'sms'): Promise<void> {
-    const user = await this.usersService.findById(userId);
+  async sendVerification(email: string, method: 'email' | 'sms'): Promise<void> {
+    const user = await this.usersService.findByEmail(email);
 
     if (!user) {
       throw new BadRequestException('Usuario no encontrado');
     }
 
     const token = uuidv4().slice(0, 6);
-    await this.usersService.saveVerificationToken(userId, token);
+    await this.usersService.saveVerificationToken(user.id, token);
 
     if (method === 'email') {
       await this.emailService.sendVerificationEmail(user.email, token);
@@ -109,26 +109,21 @@ export class AuthService {
     return false;
   }
 
-  async changePassword(userId: number, changePasswordDto: ChangePasswordDto): Promise<void> {
-    const { oldPassword, newPassword, token} = changePasswordDto;
+  async changePassword(email: string, changePasswordDto: ChangePasswordDto): Promise<void> {
+    const { newPassword, token} = changePasswordDto;
     
-    const user = await this.usersService.findById(userId);
+    const user = await this.usersService.findByEmail(email);
     if (!user) {
       throw new BadRequestException('Usuario no encontrado');
     }
 
-    const isOldPasswordValid = await bcrypt.compare(oldPassword, user.password);
-    if (!isOldPasswordValid) {
-      throw new BadRequestException('La contraseña antigua es incorrecta');
-    }
-
-    const isVerified = await this.verifyToken(userId, token);
+    const isVerified = await this.verifyToken(user.id, token);
     if (!isVerified) {
       throw new BadRequestException('Token de verificación no válido');
     }
 
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
-    await this.usersService.updatePassword(userId, hashedNewPassword);
+    await this.usersService.updatePassword(user.id, hashedNewPassword);
   }
   //////David
 

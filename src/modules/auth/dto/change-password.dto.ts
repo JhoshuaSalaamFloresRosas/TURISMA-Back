@@ -2,10 +2,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty, MinLength, Matches } from 'class-validator';
 
 export class ChangePasswordDto {
-  @ApiProperty({required: true, description: "Contraseña antigua"})
-  @IsString()
-  @IsNotEmpty()
-  oldPassword: string;
+  // @ApiProperty({required: true, description: "Contraseña antigua"})
+  // @IsString()
+  // @IsNotEmpty()
+  // oldPassword: string;
 
   @ApiProperty({required: true, description: "Contraseña nueva"})
   @IsString({ message: 'La contraseña debe ser una cadena de caracteres.' })

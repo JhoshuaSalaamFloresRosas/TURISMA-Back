@@ -81,8 +81,9 @@ export class AuthService {
 
   ///////Ajusta el servicio de autenticación para manejar el envío dinámico de tokens y la verificación:
 
-  async sendVerification(email: string, method: 'email' | 'sms'): Promise<void> {
-    const user = await this.usersService.findByEmail(email);
+  async sendVerification(contacto: string, method: 'email' | 'sms'): Promise<void> {
+    if (method === 'email') {
+      const user = await this.usersService.findByEmail(contacto);
 
     if (!user) {
       throw new BadRequestException('Usuario no encontrado');
@@ -90,10 +91,17 @@ export class AuthService {
 
     const token = uuidv4().slice(0, 6);
     await this.usersService.saveVerificationToken(user.id, token);
-
-    if (method === 'email') {
       await this.emailService.sendVerificationEmail(user.email, token);
+
     } else if (method === 'sms') {
+      const user = await this.usersService.findByNumber(contacto);
+
+    if (!user) {
+      throw new BadRequestException('Usuario no encontrado');
+    }
+
+    const token = uuidv4().slice(0, 6);
+    await this.usersService.saveVerificationToken(user.id, token);
       await this.smsService.sendVerificationSms(user.phone, token);
     }
   }

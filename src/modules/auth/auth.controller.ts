@@ -112,8 +112,8 @@ export class AuthController {
   //@UseGuards(JwtAuthGuard)
   @Public()
   @Post('send-verification')
-  async sendVerification(@Body('method') method: 'email' | 'sms', @Body("email") email: string) {
-    await this.authService.sendVerification(email, method);
+  async sendVerification(@Body('method') method: 'email' | 'sms', @Body('contacto') contacto: string) {
+    await this.authService.sendVerification(contacto, method);
     return { message: 'Código de verificación enviado correctamente.' };
   }
 
@@ -246,5 +246,10 @@ export class AuthController {
     const userId = req.user.userId;
     await this.authService.recoveryPassword(userId, recoveryPassword);
     return { message: 'Contraseña cambiado correctamente' }
+  }
+
+  @Get('/getuser')
+  async getUser(@Body('id') id: number){
+
   }
 }

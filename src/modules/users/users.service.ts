@@ -35,6 +35,14 @@ export class UsersService {
     });
   }
 
+  async findByNumber(phone: string): Promise<User | null> {
+    return this.prisma.user.findFirst({
+      where: {
+        phone,
+      },
+    });
+  }
+
   //agegar la logica para que solo se pueda añadir los datos del dto
   async create(data: Prisma.UserCreateInput): Promise<User> {
     

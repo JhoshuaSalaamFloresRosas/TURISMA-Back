@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query, Request, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Patch, Post, Query, Request, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthService } from './auth.service';
@@ -248,8 +248,11 @@ export class AuthController {
     return { message: 'Contraseña cambiado correctamente' }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/getuser')
-  async getUser(@Body('id') id: number){
-
+  async getUser(@Request() req){
+    const userId = req.user.userId
+    const user = await this.authService.getUser(userId)
+    return user
   }
 }

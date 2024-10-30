@@ -9,6 +9,7 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ChangePhoneDto } from './dto/change-phone.dto';
 import { RecoveryPasswordDto } from './dto/recovery-password.dto';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -195,5 +196,13 @@ export class AuthService {
 
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
     await this.usersService.updatePassword(userId, hashedNewPassword);
+  }
+
+  async getUser(id: number): Promise<User | null>{
+    const user = await this.usersService.findById(id)
+    if(!user){
+      throw new BadRequestException('Usuario no encontrado')
+    }
+    return user
   }
 }

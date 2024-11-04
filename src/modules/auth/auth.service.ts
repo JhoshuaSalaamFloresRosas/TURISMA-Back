@@ -149,16 +149,11 @@ export class AuthService {
   }
 
   async changePhone(userId: number, changePhoneDto: ChangePhoneDto): Promise<void> {
-    const {oldPhone, newPhone, token} = changePhoneDto;
+    const {newPhone, token} = changePhoneDto;
     
     const user = await this.usersService.findById(userId);
     if(!user) {
       throw new BadRequestException('Usuario no encontrado');
-    }
-
-    const isOldPhoneValid = oldPhone === user.phone;
-    if (!isOldPhoneValid) {
-      throw new BadRequestException('El telefono antiguo es incorrecto');
     }
 
     const isVerified = await this.verifyToken(userId, token);

@@ -95,7 +95,8 @@ export class ReservationsService {
       },
       include:{
         payment: true,
-        seats: true
+        seats: true,
+        excursion: true,
       }
     });
     if(!reservations){

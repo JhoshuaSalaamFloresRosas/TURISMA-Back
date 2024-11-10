@@ -41,6 +41,8 @@ export class ExcursionsService {
         id: true,
         name: true,
         departureDate: true,
+        arrivalDate: true,
+        description: true,
         price: true,
         status: true,
         likes: true,

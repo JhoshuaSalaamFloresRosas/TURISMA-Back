@@ -73,6 +73,11 @@ export class ExcursionsService {
           },
         },
         transport: true,
+        reservations: {
+          include: {
+            seats: true
+          }
+        }
       },
     });
   }

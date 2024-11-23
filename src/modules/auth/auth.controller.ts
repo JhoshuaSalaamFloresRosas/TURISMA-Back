@@ -135,6 +135,20 @@ export class AuthController {
     await this.authService.changePassword(email, changePasswordDto);
     return { message: 'Contraseña cambiada correctamente.' };
   }
+  
+  @Public()
+  @Patch('verify-token')
+  async verifyToken(@Body('token') token: string, @Body('email') email: string) {
+    // Paso 1: Verificar el token
+    const isTokenValid = await this.authService.verifyTokenForPasswordReset(email, token);
+
+    if (!isTokenValid) {
+      throw new BadRequestException('Token de verificación no válido');
+    }
+
+  // Si el token es válido, responder indicando que es correcto y permitir cambiar la contraseña
+  return { message: 'Token válido, puede cambiar la contraseña ahora.' };
+}
 
   @ApiOperation({summary: "Eliminar un usuario."})
   @ApiBody({

@@ -40,7 +40,9 @@ export class ExcursionsService {
       select: {
         id: true,
         name: true,
+        description: true,
         departureDate: true,
+        arrivalDate: true,
         price: true,
         status: true,
         likes: true,

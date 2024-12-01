@@ -7,6 +7,7 @@ import { RolesGuard } from '../../common/guards/roles.guard';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { ApiBearerAuth, ApiCreatedResponse, ApiOperation, ApiTags, ApiParam, ApiBody, ApiResponse } from '@nestjs/swagger';
 import { ExcursionEntity } from './entities/excursion.entity';
+import { Public } from '../../common/decorators/public.decorator';
 
 @ApiBearerAuth()
 @ApiTags('Excursiones')
@@ -19,7 +20,8 @@ export class ExcursionsController {
    * Funcion para mostrar informacion resumida de las excursiones
    * @returns 
    */
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
+  @Public()
   @Get()
   @ApiOperation({ summary: 'Obtener todas las excursiones' })
   @ApiCreatedResponse({
@@ -35,7 +37,8 @@ export class ExcursionsController {
    * @param id 
    * @returns 
    */
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
+  @Public()
   @Get(':id')
   @ApiOperation({ summary: 'Obtener una excursión por ID' })
   @ApiParam({ name: 'id', description: 'ID de la excursión', type: String })

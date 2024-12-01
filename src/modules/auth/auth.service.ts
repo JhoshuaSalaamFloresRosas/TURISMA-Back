@@ -107,6 +107,29 @@ export class AuthService {
     }
   }
 
+  async verifyTokenForPasswordReset(email: string, token: string): Promise<boolean> {
+    const user = await this.usersService.findByEmail(email);
+    if (!user) {
+      throw new BadRequestException('Usuario no encontrado');
+    }
+  
+    // Verificar el token de recuperación de contraseña
+    const isVerified = await this.verifyTokenNew(user.id, token);
+    return isVerified;
+  }
+
+  async verifyTokenNew(userId: number, token: string): Promise<boolean> {
+    // Buscar al usuario por su ID
+    const user = await this.usersService.findById(userId);
+  
+    // Comparar el token de verificación con el proporcionado
+    if (user.verificationToken === token) {
+      return true;
+    }
+  
+    return false;
+  }
+
   async verifyToken(userId: number, token: string): Promise<boolean> {
     const user = await this.usersService.findById(userId);
 
